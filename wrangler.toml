@@ -1,0 +1,8 @@
+name = "fixtweet"
+account_id = "8b834d5e4c8369fee7b0bff1a3d0132f"
+main = "./dist/worker.js"
+compatibility_date = "2024-11-14"
+send_metrics = false
+
+[build]
+command = "npm run build"
