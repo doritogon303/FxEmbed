@@ -157,7 +157,8 @@ export const handleStatus = async (
     ) &&
     !flags.direct &&
     !flags.gallery &&
-    !flags.api
+    !flags.api &&
+    !flags.noActivity
   ) {
     useActivity = true;
   }
@@ -332,7 +333,8 @@ export const handleStatus = async (
   console.log('overrideMedia', JSON.stringify(overrideMedia));
   console.log('media', JSON.stringify(status.media));
 
-  if (!flags?.textOnly) {
+  // Skip for activity to make embed generate faster for mosaic and such
+  if (!useActivity && !flags?.textOnly) {
     const media =
       status.media?.all && status.media?.all.length > 0 ? status.media : status.quote?.media || {};
     if (overrideMedia) {
@@ -389,7 +391,7 @@ export const handleStatus = async (
           /* This status has a video to render. */
           break;
       }
-    } else if (media?.videos && !flags.forceMosaic) {
+    } else if (media?.videos && !flags.nativeMultiImage) {
       const instructions = renderVideo(
         { context: c, status: status, userAgent: userAgent, text: newText },
         media.videos[0]
@@ -404,7 +406,7 @@ export const handleStatus = async (
     } else if (media?.mosaic) {
       if (
         isDiscord &&
-        !flags.forceMosaic
+        flags.nativeMultiImage
       ) {
         const photos = status.media?.photos || [];
 
@@ -452,7 +454,7 @@ export const handleStatus = async (
       );
       headers.push(...instructions.addHeaders);
     }
-    if (status.media?.external && !status.media.videos?.length && !flags.forceMosaic) {
+    if (status.media?.external && !status.media.videos?.length && !flags.nativeMultiImage) {
       const { external } = status.media;
       authorText = newText || '';
       headers.push(
@@ -605,18 +607,23 @@ export const handleStatus = async (
       provider = providerEngagementText;
     }
 
-    // Now you can use the 'provider' variable
-
     if (useActivity) {
-      const name =
-        status.provider === DataProvider.Bsky
-          ? 'fxbluesky'
-          : flags.isXDomain
-            ? 'fixupx'
-            : 'fxtwitter';
-      headers.push(
-        `<link href='https://raw.githubusercontent.com/FxEmbed/FxEmbed/refs/heads/main/.github/logos/${name}32.png' rel='icon' sizes='32x32' type='image/png'>`
-      );
+      const icons = getBranding(c).activityIcons;
+      const iconSizes = ["svg", "64", "48", "32", "24", "16"];
+      
+      for (const size of iconSizes) {
+        let icon = icons?.[size];
+        // Use default icon if size 32 is not available
+        if (size === "32" && !icon) {
+          icon = icons?.["default"];
+        }
+        const iconType = size === "svg" ? "image/svg+xml" : "image/png";
+        if (icon) {
+          headers.push(
+            `<link href='${icon}' rel='icon' sizes='${size}x${size}' type='${iconType}'>`
+          );
+        }
+      }
     }
 
     headers.push(
@@ -649,7 +656,7 @@ export const handleStatus = async (
     if (flags.textOnly) {
       data.t = 1;
     }
-    if (flags.forceMosaic) {
+    if (flags.nativeMultiImage) {
       data.m = 1;
     }
     if (mediaNumber) {

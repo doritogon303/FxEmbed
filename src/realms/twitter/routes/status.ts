@@ -8,7 +8,7 @@ import { InputFlags } from '../../../types/types';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
-  const { prefix, handle, id, mediaNumber, language } = c.req.param();
+  const { handle, id, mediaNumber, language } = c.req.param();
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
 
@@ -37,8 +37,7 @@ export const statusRequest = async (c: Context) => {
   const isBotUA = userAgent.match(Constants.BOT_UA_REGEX) !== null || flags?.archive;
 
   /* Check if domain is a direct media domain (i.e. d.fxtwitter.com),
-     the status is prefixed with /dl/ or /dir/ (for TwitFix interop), or the
-     status ends in .mp4, .jpg, .jpeg, or .png
+     or the status ends in .mp4, .jpg, .jpeg, or .png
       
      Note that .png is not documented because images always redirect to a jpg,
      but it will help someone who does it mistakenly on something like Discord
@@ -64,11 +63,11 @@ export const statusRequest = async (c: Context) => {
     console.log('Gallery embed request');
     flags.gallery = true;
   } else if (Constants.NATIVE_MULTI_IMAGE_DOMAINS.includes(url.hostname)) {
-    console.log('Force mosaic');
-    flags.forceMosaic = true;
-  } else if (prefix === 'dl' || prefix === 'dir') {
-    console.log('Direct media request by path prefix');
-    flags.direct = true;
+    console.log('Force native multi image');
+    flags.nativeMultiImage = true;
+  } else if (Constants.OLD_EMBED_DOMAINS.includes(url.hostname)) {
+    console.log('Disable activity embed');
+    flags.noActivity = true;
   }
 
   /* Support redirecting to specific quality of image, like:
@@ -148,17 +147,18 @@ export const statusRequest = async (c: Context) => {
           const appBody = await app.text();
           if (appBody.includes('<!doctype html>')) {
             return c.html(appBody, 200);
-          } else if (baseUrl.startsWith('twitter://')) {
+          } else if (baseUrl.startsWith('twitter:/')) {
             console.log('twitter:// redirect');
-            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+            return c.redirect(`twitter://status?id=${id}`, 302);
           } else {
             console.log('normal redirect');
             return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
           }
         } else {
-          if (baseUrl.startsWith('twitter://')) {
+          console.log(`baseUrl: ${baseUrl}`);
+          if (baseUrl.startsWith('twitter:/')) {
             console.log('twitter:// redirect');
-            return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+            return c.redirect(`twitter://status?id=${id}`, 302);
           } else {
             console.log('normal redirect');
             return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
@@ -187,18 +187,19 @@ export const statusRequest = async (c: Context) => {
         return c.html(appBody, 200);
       } else {
         console.log('huh weird');
-        if (baseUrl.startsWith('twitter://')) {
+        if (baseUrl.startsWith('twitter:/')) {
           console.log('twitter:// redirect');
-          return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+          return c.redirect(`twitter://status?id=${id}`, 302);
         } else {
           console.log('normal redirect');
           return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id}`, 302);
         }
       }
     } else {
-      if (baseUrl.startsWith('twitter://')) {
+      console.log(`baseUrl: ${baseUrl}`);
+      if (baseUrl.startsWith('twitter:/')) {
         console.log('twitter:// redirect');
-        return c.redirect(`${baseUrl}/status?id=${id}`, 302);
+        return c.redirect(`twitter://status?id=${id}`, 302);
       } else {
         console.log('normal redirect');
         return c.redirect(`${baseUrl}/${handle || 'i'}/status/${id?.match(/\d{2,20}/)?.[0]}`, 302);

@@ -1,6 +1,5 @@
 export const Constants = {
   /* These constants are populated by variables in .env, then set by Webpack */
-  BRANDING_NAME: BRANDING_NAME,
   STANDARD_DOMAIN_LIST: STANDARD_DOMAIN_LIST.split(','),
   STANDARD_BSKY_DOMAIN_LIST: STANDARD_BSKY_DOMAIN_LIST.split(','),
   DIRECT_MEDIA_DOMAINS: DIRECT_MEDIA_DOMAINS.split(','),
@@ -9,6 +8,7 @@ export const Constants = {
   INSTANT_VIEW_THREADS_DOMAINS: INSTANT_VIEW_THREADS_DOMAINS.split(','),
   GALLERY_DOMAINS: GALLERY_DOMAINS.split(','),
   NATIVE_MULTI_IMAGE_DOMAINS: NATIVE_MULTI_IMAGE_DOMAINS.split(','),
+  OLD_EMBED_DOMAINS: OLD_EMBED_DOMAINS.split(','),
   MOSAIC_DOMAIN_LIST: MOSAIC_DOMAIN_LIST.split(','),
   MOSAIC_BSKY_DOMAIN_LIST: MOSAIC_BSKY_DOMAIN_LIST.split(','),
   API_HOST_LIST: API_HOST_LIST.split(','),
@@ -25,7 +25,7 @@ export const Constants = {
   BSKY_VIDEO_BASE: 'https://video.bsky.app',
   BSKY_API_ROOT: 'https://public.api.bsky.app',
   BOT_UA_REGEX:
-    /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|revoltchat|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|node|mastodon|http\.rb|ruby|bun\/|fiddler|iframely|steamchaturllookup|bluesky|matrix-media-repo/gi,
+    /bot|facebook|embed|got|firefox\/92|firefox\/38|curl|wget|go-http|yahoo|generator|whatsapp|revoltchat|preview|link|proxy|vkshare|images|analyzer|index|crawl|spider|python|node|mastodon|http\.rb|ruby|bun\/|fiddler|iframely|steamchaturllookup|bluesky|matrix-media-repo|cardyb/gi,
   /* 3 hours */
   GUEST_TOKEN_MAX_AGE: 3 * 60 * 60,
   GUEST_BEARER_TOKEN: `Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA`,
