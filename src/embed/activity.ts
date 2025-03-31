@@ -87,7 +87,7 @@ const linkifyMentions = (text: string, status: APIStatus) => {
     status.provider === DataProvider.Bsky
       ? `${Constants.BSKY_ROOT}/profile`
       : `${Constants.TWITTER_ROOT}`;
-  const matches = text.match(/(?<!https?:\/\/[\w.:/]+)@([\w.]+)(?=\W|$)/g);
+  const matches = text.match(/(?<!https?:\/\/[\w.\-_%$@&?!:;/'()*]+)@([\w.]+)(?=\W|$)/g);
 
   console.log('matches', matches);
   // deduplicate mentions
@@ -106,7 +106,7 @@ const linkifyHashtags = (text: string, status: APIStatus) => {
     status.provider === DataProvider.Bsky
       ? `${Constants.BSKY_ROOT}/hashtag`
       : `${Constants.TWITTER_ROOT}/hashtag`;
-  const matches = text.match(/(?<!https?:\/\/[\w.:/]+)#([\w.]+)(?=\W|$)/g);
+  const matches = text.match(/(?<!https?:\/\/[\w.\-_%$@&?!:;/'()*]+)#([\w.]+)(?=\W|$)/g);
   console.log('matches', matches);
   // deduplicate hashtags
   [...new Set(matches ?? [])]?.forEach(hashtag => {
@@ -142,11 +142,11 @@ const formatStatus = (text: string, status: APIStatus) => {
       status.provider === DataProvider.Bsky
         ? `${Constants.BSKY_ROOT}/hashtag`
         : `${Constants.TWITTER_ROOT}/hashtag`;
-    // const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
-    // const baseMentionUrl =
-    //   status.provider === DataProvider.Bsky
-    //     ? `${Constants.BSKY_ROOT}/profile`
-    //     : `${Constants.TWITTER_ROOT}`;
+    const baseSymbolUrl = `${Constants.TWITTER_ROOT}/search?q=%24`;
+    const baseMentionUrl =
+      status.provider === DataProvider.Bsky
+        ? `${Constants.BSKY_ROOT}/profile`
+        : `${Constants.TWITTER_ROOT}`;
     let offset = 0;
     status.raw_text.facets.forEach(facet => {
       let newFacet = '';
@@ -159,18 +159,18 @@ const formatStatus = (text: string, status: APIStatus) => {
             text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
-        // case 'italic':
-        //   text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
-        //   offset += 14;
-        //   break;
-        // case 'underline':
-        //   text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
-        //   offset += 14;
-        //   break;
-        // case 'strikethrough':
-        //   text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
-        //   offset += 14;
-        //   break;
+        case 'italic':
+          text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
+          offset += 14;
+          break;
+        case 'underline':
+          text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
+          offset += 14;
+          break;
+        case 'strikethrough':
+          text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
+          offset += 14;
+          break;
         case 'url':
           newFacet = `<a href="${facet.replacement}">${facet.display}</a>`;
           text =
@@ -187,16 +187,16 @@ const formatStatus = (text: string, status: APIStatus) => {
             text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
-        // case 'symbol':
-        //   newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
-        //   text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
-        //   offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
-        //   break;
-        // case 'mention':
-        //   newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
-        //   text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
-        //   offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
-        //   break;
+        case 'symbol':
+          newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+          break;
+        case 'mention':
+          newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
+          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
+          break;
         case 'media':
           text = text.slice(0, facet.indices[0] + offset) + text.slice(facet.indices[1] + offset);
           offset -= facet.indices[1] - facet.indices[0];
@@ -267,7 +267,6 @@ export const handleActivity = async (
     return returnError(c, Strings.ERROR_API_FAIL);
   }
 
-  const userAgent = c.req.header('User-Agent');
   // Map FxEmbed API to Mastodon API v1
   const response: ActivityStatus = {
     id: statusId,
@@ -406,8 +405,7 @@ export const handleActivity = async (
               sizeMultiplier = 2;
             }
             if (
-              experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
-              (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
+              experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
             ) {
               video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
             }

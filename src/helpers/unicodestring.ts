@@ -1,5 +1,5 @@
 /* 
-  Derived from https://github.com/bluesky-social/atproto/packages/api/src/rich-text/unicode.ts
+  Derived from https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/unicode.ts
   License: Apache-2.0 / MIT
 */
 
