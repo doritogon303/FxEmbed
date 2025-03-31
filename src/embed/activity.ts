@@ -11,8 +11,18 @@ import { escapeRegex } from '../helpers/utils';
 import { decodeSnowcode } from '../helpers/snowcode';
 import translationResources from '../../i18n/resources';
 import { Experiment, experimentCheck } from '../experiments';
-import { APIPhoto, APIPoll, APIStatus, APITwitterStatus, APIVideo, SocialThread } from '../types/types';
-import { Context } from 'hono/jsx/dom';
+import {
+  ActivityMediaAttachment,
+  ActivityStatus,
+  APIPhoto,
+  APIPoll,
+  APIStatus,
+  APITwitterStatus,
+  APIVideo,
+  SocialThread
+} from '../types/types';
+import { Context } from 'hono';
+
 
 const generatePoll = (poll: APIPoll): string => {
   let str = '<blockquote>';
@@ -204,7 +214,6 @@ const formatStatus = (text: string, status: APIStatus) => {
 };
 
 export const handleActivity = async (
-  // @ts-expect-error Can't resolve Context properly????
   c: Context,
   snowcode: string,
   provider: DataProvider
@@ -260,7 +269,7 @@ export const handleActivity = async (
 
   const userAgent = c.req.header('User-Agent');
   // Map FxEmbed API to Mastodon API v1
-  const response = {
+  const response: ActivityStatus = {
     id: statusId,
     url: thread.status.url,
     uri: thread.status.url,
@@ -268,7 +277,7 @@ export const handleActivity = async (
     edited_at: null,
     reblog: null,
     in_reply_to_id: thread.status.replying_to?.post,
-    // in_reply_to_account_id: ,
+    in_reply_to_account_id: null,
     language: thread.status.lang,
     // TODO: Do formatting
     content: getStatusText(thread.status),
@@ -323,27 +332,7 @@ export const handleActivity = async (
 
   console.log('mediaList', mediaList);
 
-  if (!nativeMultiImage && thread.status.media?.mosaic) {
-    response['media_attachments'] = [
-      // @ts-expect-error doesn't know what to do with this
-      {
-        id: '114163769487684704',
-        type: 'image',
-        url: thread.status.media?.mosaic?.formats?.jpeg,
-        preview_url: thread.status.media?.mosaic?.formats?.jpeg,
-        remote_url: null,
-        preview_remote_url: null,
-        text_url: null,
-        description: null,
-        meta: {
-          original: {
-            width: thread.status.media?.mosaic?.width,
-            height: thread.status.media?.mosaic?.height
-          }
-        }
-      }
-    ];
-  } else if (!textOnly) {
+  if (!textOnly) {
     if (mediaNumber) {
       console.log('we have a media number', mediaNumber);
       const newMedia = rawMediaList?.[mediaNumber - 1];
@@ -354,9 +343,36 @@ export const handleActivity = async (
       }
       console.log('updated mediaList', mediaList);
     }
-    if (mediaList && mediaList.length > 0) {
-      // @ts-expect-error doesn't know what to do with this
-      response['media_attachments'] = mediaList.map(media => {
+    if (
+      !nativeMultiImage &&
+      mediaList?.length !== 1 &&
+      thread.status.media?.mosaic
+    ) {
+      // Cast the response to have media_attachments as ActivityMediaAttachment[]
+      response.media_attachments = [
+        {
+          id: '114163769487684704',
+          type: 'image',
+          url: thread.status.media?.mosaic?.formats?.jpeg || '',
+          remote_url: null,
+          preview_url: null,
+          preview_remote_url: null,
+          text_url: null,
+          description: null,
+          meta: {
+            original: {
+              width: thread.status.media?.mosaic?.width || 0,
+              height: thread.status.media?.mosaic?.height || 0
+            }
+          }
+        }
+      ];
+    } else if (mediaList && mediaList.length > 0) {
+      // Cast results to ActivityMediaAttachment[]
+      response.media_attachments = mediaList.map(media => {
+        if (media.type === 'gif' && (media as APIVideo).format === 'image/gif') {
+          media.type = 'photo';
+        }
         switch (media.type) {
           case 'photo':
             const image = media as APIPhoto;
@@ -364,7 +380,7 @@ export const handleActivity = async (
               id: '114163769487684704',
               type: 'image',
               url: image.url,
-              preview_url: image.url,
+              preview_url: null,
               remote_url: null,
               preview_remote_url: null,
               text_url: null,
@@ -377,7 +393,7 @@ export const handleActivity = async (
                   aspect: image.width / image.height
                 }
               }
-            };
+            } as ActivityMediaAttachment;
           case 'video':
           case 'gif':
             const video = media as APIVideo;
@@ -390,10 +406,7 @@ export const handleActivity = async (
               sizeMultiplier = 2;
             }
             if (
-              experimentCheck(
-                Experiment.VIDEO_REDIRECT_WORKAROUND,
-                !!Constants.API_HOST_LIST
-              ) &&
+              experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST) &&
               (userAgent?.includes('Discord') || userAgent?.includes('Telegram'))
             ) {
               video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
@@ -406,6 +419,7 @@ export const handleActivity = async (
               remote_url: null,
               preview_remote_url: null,
               text_url: null,
+              description: null,
               meta: {
                 original: {
                   width: video.width * sizeMultiplier,
@@ -414,13 +428,15 @@ export const handleActivity = async (
                   aspect: video.width / video.height
                 }
               }
-            };
+            } as ActivityMediaAttachment;
+          default:
+            return null;
         }
-      });
+      }).filter(Boolean) as ActivityMediaAttachment[];
     } else if (thread.status.media?.external) {
       const external = thread.status.media.external;
-      response['media_attachments'] = [
-        // @ts-expect-error doesn't know what to do with this
+      // Cast the response media attachments to correct type
+      response.media_attachments = [
         {
           id: '114163769487684704',
           type: 'video',
@@ -429,6 +445,7 @@ export const handleActivity = async (
           remote_url: null,
           preview_remote_url: null,
           text_url: null,
+          description: null,
           meta: {
             original: {
               width: external.width,
@@ -437,7 +454,7 @@ export const handleActivity = async (
               aspect: 1
             }
           }
-        }
+        } as ActivityMediaAttachment
       ];
     }
   }

@@ -91,10 +91,9 @@ Otherwise, it will default to the first image.
 
 By default, FxEmbed will combine multiple images into one, allowing you to see all images on all platforms. You can also opt in to have images displayed using Discord's native multi-image so you can view individual, full-quality images (but, it doesn't work on iOS :( )
 
-https://m.fxtwitter.com/example/status/123456789123456789
-https://m.fixupx.com/example/status/123456789123456789
-https://m.fxbsky.app/profile/example.com/post/3lkord123abc
-
+- `https://m.fxtwitter.com/example/status/123456789123456789`
+- `https://m.fixupx.com/example/status/123456789123456789`
+- `https://m.fxbsky.app/profile/example.com/post/3lkord123abc`
 
 <img width="790px" src="https://raw.githubusercontent.com/FxEmbed/FxEmbed/main/assets/readme/mosaic.png">
 
@@ -236,9 +235,9 @@ Feel free to [open an issue](https://github.com/FxEmbed/FxEmbed/issues)
 
 ## Additional Credits
 
-[Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A)
+[Mosaic](https://github.com/FixTweet/mosaic) Multi-image combiner by [Antonio32A](https://github.com/Antonio32A) and improved by [Syfaro](https://github.com/Syfaro) and [Deer Spangle](https://github.com/Deer-Spangle)
 
-& other contributions by [Antonio32A](https://github.com/Antonio32A), [Burner](https://github.com/YaBoiBurner), [Deer-Spangle](https://github.com/Deer-Spangle), [Eramdam](https://github.com/Eramdam), [SirStendec](https://github.com/SirStendec), [SpeedyFolf](https://github.com/SpeedyFolf), [Wazbat](https://github.com/Wazbat)
+[Everyone else who has contributed to the main project!](https://github.com/FxEmbed/FxEmbed/graphs/contributors)
 
 ## Disclaimer
 
