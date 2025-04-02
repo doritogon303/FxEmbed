@@ -23,15 +23,14 @@
               "urls": []
             },
             "url": {
-              "urls": [{
-                "display_url": "x.com",
-                "expanded_url": "https://x.com",
-                "url": "https://t.co/Xp0xJlcROt",
-                "indices": [
-                  0,
-                  23
-                ]
-              }]
+              "urls": [
+                {
+                  "display_url": "x.com",
+                  "expanded_url": "https://x.com",
+                  "url": "https://t.co/Xp0xJlcROt",
+                  "indices": [0, 23]
+                }
+              ]
             }
           },
           "fast_followers_count": 0,
@@ -62,11 +61,13 @@
         "professional": {
           "rest_id": "1858538123375874167",
           "professional_type": "Business",
-          "category": [{
-            "id": 714,
-            "name": "Technology Company",
-            "icon_name": "IconBriefcaseStroke"
-          }]
+          "category": [
+            {
+              "id": 714,
+              "name": "Technology Company",
+              "icon_name": "IconBriefcaseStroke"
+            }
+          ]
         },
         "tipjar_settings": {},
         "legacy_extended_profile": {},
@@ -77,14 +78,16 @@
           "reason": {
             "description": {
               "text": "This account is verified because it's an official organization on X. Learn more",
-              "entities": [{
-                "from_index": 69,
-                "to_index": 79,
-                "ref": {
-                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
-                  "url_type": "ExternalUrl"
+              "entities": [
+                {
+                  "from_index": 69,
+                  "to_index": 79,
+                  "ref": {
+                    "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                    "url_type": "ExternalUrl"
+                  }
                 }
-              }]
+              ]
             },
             "verified_since_msec": "1362700632470"
           }

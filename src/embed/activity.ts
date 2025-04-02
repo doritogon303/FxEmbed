@@ -22,7 +22,7 @@ import {
   SocialThread
 } from '../types/types';
 import { Context } from 'hono';
-
+import { shouldTranscodeGif } from '../helpers/giftranscode';
 
 const generatePoll = (poll: APIPoll): string => {
   let str = '<blockquote>';
@@ -160,15 +160,24 @@ const formatStatus = (text: string, status: APIStatus) => {
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'italic':
-          text = text.slice(0, facet.indices[0] + offset) + `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            `<i>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</i>` +
+            text.slice(facet.indices[1] + offset);
           offset += 14;
           break;
         case 'underline':
-          text = text.slice(0, facet.indices[0] + offset) + `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            `<u>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</u>` +
+            text.slice(facet.indices[1] + offset);
           offset += 14;
           break;
         case 'strikethrough':
-          text = text.slice(0, facet.indices[0] + offset) + `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            `<s>${text.slice(facet.indices[0] + offset, facet.indices[1] + offset)}</s>` +
+            text.slice(facet.indices[1] + offset);
           offset += 14;
           break;
         case 'url':
@@ -189,12 +198,18 @@ const formatStatus = (text: string, status: APIStatus) => {
           break;
         case 'symbol':
           newFacet = `<a href="${baseSymbolUrl}/${facet.original}">$${facet.original}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            newFacet +
+            text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'mention':
           newFacet = `<a href="${baseMentionUrl}/${facet.original}">@${facet.original}</a>`;
-          text = text.slice(0, facet.indices[0] + offset) + newFacet + text.slice(facet.indices[1] + offset);
+          text =
+            text.slice(0, facet.indices[0] + offset) +
+            newFacet +
+            text.slice(facet.indices[1] + offset);
           offset += newFacet.length - (facet.indices[1] - facet.indices[0]);
           break;
         case 'media':
@@ -342,11 +357,7 @@ export const handleActivity = async (
       }
       console.log('updated mediaList', mediaList);
     }
-    if (
-      !nativeMultiImage &&
-      mediaList?.length !== 1 &&
-      thread.status.media?.mosaic
-    ) {
+    if (!nativeMultiImage && mediaList?.length !== 1 && thread.status.media?.mosaic) {
       // Cast the response to have media_attachments as ActivityMediaAttachment[]
       response.media_attachments = [
         {
@@ -368,69 +379,80 @@ export const handleActivity = async (
       ];
     } else if (mediaList && mediaList.length > 0) {
       // Cast results to ActivityMediaAttachment[]
-      response.media_attachments = mediaList.map(media => {
-        if (media.type === 'gif' && (media as APIVideo).format === 'image/gif') {
-          media.type = 'photo';
-        }
-        switch (media.type) {
-          case 'photo':
-            const image = media as APIPhoto;
-            return {
-              id: '114163769487684704',
-              type: 'image',
-              url: image.url,
-              preview_url: null,
-              remote_url: null,
-              preview_remote_url: null,
-              text_url: null,
-              description: image.altText ?? null,
-              meta: {
-                original: {
-                  width: image.width,
-                  height: image.height,
-                  size: `${image.width}x${image.height}`,
-                  aspect: image.width / image.height
-                }
-              }
-            } as ActivityMediaAttachment;
-          case 'video':
-          case 'gif':
-            const video = media as APIVideo;
-            let sizeMultiplier = 2;
+      response.media_attachments = mediaList
+        .map(media => {
+          if (media.type === 'gif') {
+            const videoMedia = media as APIVideo;
+            const photoMedia = media as APIPhoto;
+            const shouldTranscodeGifs = shouldTranscodeGif(c);
 
-            if (video.width > 1920 || video.height > 1920) {
-              sizeMultiplier = 0.5;
+            if (videoMedia.format === 'image/gif') {
+              media.type = 'photo';
+            } else if (shouldTranscodeGifs && photoMedia.transcode_url) {
+              media.type = 'photo';
+              media.url = photoMedia.transcode_url;
             }
-            if (video.width < 400 || video.height < 400) {
-              sizeMultiplier = 2;
-            }
-            if (
-              experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
-            ) {
-              video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
-            }
-            return {
-              id: '114163769487684704',
-              type: 'video',
-              url: video.url,
-              preview_url: video.thumbnail_url,
-              remote_url: null,
-              preview_remote_url: null,
-              text_url: null,
-              description: null,
-              meta: {
-                original: {
-                  width: video.width * sizeMultiplier,
-                  height: video.height * sizeMultiplier,
-                  size: `${video.width * sizeMultiplier}x${video.height * sizeMultiplier}`,
-                  aspect: video.width / video.height
+          }
+          switch (media.type) {
+            case 'photo':
+              const image = media as APIPhoto;
+              return {
+                id: '114163769487684704',
+                type: 'image',
+                url: image.url,
+                preview_url: null,
+                remote_url: null,
+                preview_remote_url: null,
+                text_url: null,
+                description: image.altText ?? null,
+                meta: {
+                  original: {
+                    width: image.width,
+                    height: image.height,
+                    size: `${image.width}x${image.height}`,
+                    aspect: image.width / image.height
+                  }
                 }
+              } as ActivityMediaAttachment;
+            case 'video':
+            case 'gif':
+              const video = media as APIVideo;
+              let sizeMultiplier = 2;
+
+              if (video.width > 1920 || video.height > 1920) {
+                sizeMultiplier = 0.5;
               }
-            } as ActivityMediaAttachment;
-          default:
-            return null;
-        }
-      }).filter(Boolean) as ActivityMediaAttachment[];
+              if (video.width < 400 || video.height < 400) {
+                sizeMultiplier = 2;
+              }
+              if (
+                experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
+              ) {
+                video.url = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(video.url)}`;
+              }
+              return {
+                id: '114163769487684704',
+                type: 'video',
+                url: video.url,
+                preview_url: video.thumbnail_url,
+                remote_url: null,
+                preview_remote_url: null,
+                text_url: null,
+                description: null,
+                meta: {
+                  original: {
+                    width: video.width * sizeMultiplier,
+                    height: video.height * sizeMultiplier,
+                    size: `${video.width * sizeMultiplier}x${video.height * sizeMultiplier}`,
+                    aspect: video.width / video.height
+                  }
+                }
+              } as ActivityMediaAttachment;
+            default:
+              return null;
+          }
+        })
+        .filter(Boolean) as ActivityMediaAttachment[];
     } else if (thread.status.media?.external) {
       const external = thread.status.media.external;
       // Cast the response media attachments to correct type

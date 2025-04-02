@@ -1,9 +1,11 @@
 {
   "data": {
     "threaded_conversation_with_injections_v2": {
-      "instructions": [{
+      "instructions": [
+        {
           "type": "TimelineAddEntries",
-          "entries": [{
+          "entries": [
+            {
               "entryId": "tweet-20",
               "sortIndex": "9223372036854775787",
               "content": {
@@ -54,15 +56,14 @@
                                   "urls": []
                                 },
                                 "url": {
-                                  "urls": [{
-                                    "display_url": "primal.net/jack",
-                                    "expanded_url": "http://primal.net/jack",
-                                    "url": "https://t.co/ZEpOg6rn5L",
-                                    "indices": [
-                                      0,
-                                      23
-                                    ]
-                                  }]
+                                  "urls": [
+                                    {
+                                      "display_url": "primal.net/jack",
+                                      "expanded_url": "http://primal.net/jack",
+                                      "url": "https://t.co/ZEpOg6rn5L",
+                                      "indices": [0, 23]
+                                    }
+                                  ]
                                 }
                               },
                               "fast_followers_count": 0,
@@ -76,9 +77,7 @@
                               "media_count": 2927,
                               "name": "jack",
                               "normal_followers_count": 6507741,
-                              "pinned_tweet_ids_str": [
-                                "1833951636005552366"
-                              ],
+                              "pinned_tweet_ids_str": ["1833951636005552366"],
                               "possibly_sensitive": false,
                               "profile_banner_url": "https://pbs.twimg.com/profile_banners/12/1742427520",
                               "profile_image_url_https": "https://pbs.twimg.com/profile_images/1661201415899951105/azNjKOSH_normal.jpg",
@@ -99,9 +98,7 @@
                       },
                       "unmention_data": {},
                       "edit_control": {
-                        "edit_tweet_ids": [
-                          "20"
-                        ],
+                        "edit_tweet_ids": ["20"],
                         "editable_until_msecs": "1142976014000",
                         "is_edit_eligible": true,
                         "edits_remaining": "5"
@@ -117,10 +114,7 @@
                         "bookmarked": false,
                         "created_at": "Tue Mar 21 20:50:14 +0000 2006",
                         "conversation_id_str": "20",
-                        "display_text_range": [
-                          0,
-                          24
-                        ],
+                        "display_text_range": [0, 24],
                         "entities": {
                           "hashtags": [],
                           "symbols": [],

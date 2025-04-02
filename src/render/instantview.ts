@@ -180,7 +180,7 @@ const generateInlineAuthorHeader = (
 
 const wrapForeignLinks = (url: string) => {
   let unwrap = false;
-  const whitelistedDomains = ['twitter.com', 'x.com', 't.me', 'telegram.me'];
+  const whitelistedDomains = ['twitter.com', 'x.com', 't.me', 'telegram.me', 'bsky.app'];
   try {
     const urlObj = new URL(url);
 
@@ -343,7 +343,7 @@ const generateStatus = (
             url: status.url,
             authorName: status.author.name,
             authorHandle: status.author.screen_name,
-            authorURL: `${Constants.TWITTER_ROOT}/${status.author.screen_name}`
+            authorURL: status.author.url
           }) +
           '</h4>'
         : ''

@@ -18,7 +18,7 @@ export default {
       console.log('Method:', apiMethod);
       console.log('Variables:', variables);
 
-      switch(apiMethod) {
+      switch (apiMethod) {
         case 'UserByScreenName':
           const screenName = variables.screen_name;
           // load mock based on screen name
@@ -28,7 +28,7 @@ export default {
             return new Response(JSON.stringify(mock));
           } catch (error) {
             console.error('Error loading mock:', error);
-            return new Response(JSON.stringify({data:{}}));
+            return new Response(JSON.stringify({ data: {} }));
           }
         case 'TweetDetail':
           const focalTweetId = variables.focalTweetId;
@@ -40,7 +40,7 @@ export default {
           } catch (error) {
             console.error('Error loading mock:', error);
           }
-          return new Response(JSON.stringify({data:{}}));
+          return new Response(JSON.stringify({ data: {} }));
         case 'TweetResultByRestId':
           const tweetId = variables.tweetId;
           // load mock based on tweet id
@@ -51,10 +51,10 @@ export default {
           } catch (error) {
             console.error('Error loading mock:', error);
           }
-          return new Response(JSON.stringify({data:{}}));
+          return new Response(JSON.stringify({ data: {} }));
         default:
           throw new Error('Invalid request');
       }
     }
   }
-}
+};

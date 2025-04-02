@@ -24,15 +24,14 @@
                     "urls": []
                   },
                   "url": {
-                    "urls": [{
-                      "display_url": "spacex.com",
-                      "expanded_url": "http://spacex.com",
-                      "url": "https://t.co/VOJ6qEctND",
-                      "indices": [
-                        0,
-                        23
-                      ]
-                    }]
+                    "urls": [
+                      {
+                        "display_url": "spacex.com",
+                        "expanded_url": "http://spacex.com",
+                        "url": "https://t.co/VOJ6qEctND",
+                        "indices": [0, 23]
+                      }
+                    ]
                   }
                 },
                 "fast_followers_count": 0,
@@ -46,9 +45,7 @@
                 "media_count": 3761,
                 "name": "SpaceX",
                 "normal_followers_count": 38661947,
-                "pinned_tweet_ids_str": [
-                  "1904944167265935654"
-                ],
+                "pinned_tweet_ids_str": ["1904944167265935654"],
                 "possibly_sensitive": false,
                 "profile_banner_url": "https://pbs.twimg.com/profile_banners/34743251/1681251194",
                 "profile_image_url_https": "https://pbs.twimg.com/profile_images/1697749409851985920/HbrI04tM_normal.jpg",
@@ -82,9 +79,7 @@
         },
         "unmention_data": {},
         "edit_control": {
-          "edit_tweet_ids": [
-            "1848831595014459513"
-          ],
+          "edit_tweet_ids": ["1848831595014459513"],
           "editable_until_msecs": "1729634376000",
           "is_edit_eligible": true,
           "edits_remaining": "5"
@@ -101,20 +96,15 @@
           "bookmarked": false,
           "created_at": "Tue Oct 22 20:59:36 +0000 2024",
           "conversation_id_str": "1848831595014459513",
-          "display_text_range": [
-            0,
-            154
-          ],
+          "display_text_range": [0, 154],
           "entities": {
             "hashtags": [],
-            "media": [{
+            "media": [
+              {
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831473606135809",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831473606135809",
                 "media_url_https": "https://pbs.twimg.com/media/GahebgHbEAEevTU.jpg",
                 "type": "photo",
@@ -161,7 +151,8 @@
                 "original_info": {
                   "height": 2304,
                   "width": 4096,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 0,
                       "w": 4096,
@@ -203,10 +194,7 @@
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831489116602369",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831489116602369",
                 "media_url_https": "https://pbs.twimg.com/media/GahecZ5aAAEX7GX.jpg",
                 "type": "photo",
@@ -253,7 +241,8 @@
                 "original_info": {
                   "height": 3793,
                   "width": 2529,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 145,
                       "w": 2529,
@@ -295,10 +284,7 @@
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831507307409408",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831507307409408",
                 "media_url_https": "https://pbs.twimg.com/media/GaheddqbsAAzGXg.jpg",
                 "type": "photo",
@@ -345,7 +331,8 @@
                 "original_info": {
                   "height": 2252,
                   "width": 4004,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 0,
                       "w": 4004,
@@ -390,14 +377,12 @@
             "user_mentions": []
           },
           "extended_entities": {
-            "media": [{
+            "media": [
+              {
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831473606135809",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831473606135809",
                 "media_url_https": "https://pbs.twimg.com/media/GahebgHbEAEevTU.jpg",
                 "type": "photo",
@@ -444,7 +429,8 @@
                 "original_info": {
                   "height": 2304,
                   "width": 4096,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 0,
                       "w": 4096,
@@ -486,10 +472,7 @@
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831489116602369",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831489116602369",
                 "media_url_https": "https://pbs.twimg.com/media/GahecZ5aAAEX7GX.jpg",
                 "type": "photo",
@@ -536,7 +519,8 @@
                 "original_info": {
                   "height": 3793,
                   "width": 2529,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 145,
                       "w": 2529,
@@ -578,10 +562,7 @@
                 "display_url": "pic.x.com/iwmqCeF3tE",
                 "expanded_url": "https://x.com/SpaceX/status/1848831595014459513/photo/1",
                 "id_str": "1848831507307409408",
-                "indices": [
-                  155,
-                  178
-                ],
+                "indices": [155, 178],
                 "media_key": "3_1848831507307409408",
                 "media_url_https": "https://pbs.twimg.com/media/GaheddqbsAAzGXg.jpg",
                 "type": "photo",
@@ -628,7 +609,8 @@
                 "original_info": {
                   "height": 2252,
                   "width": 4004,
-                  "focus_rects": [{
+                  "focus_rects": [
+                    {
                       "x": 0,
                       "y": 0,
                       "w": 4004,

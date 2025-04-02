@@ -1,20 +1,24 @@
-import { test, expect } from "vitest";
-import { app } from "../src/worker";
-import envWrapper from "./helpers/env-wrapper";
-import { botHeaders, githubUrl, humanHeaders, twitterBaseUrl } from "./helpers/data";
+import { test, expect } from 'vitest';
+import { app } from '../src/worker';
+import envWrapper from './helpers/env-wrapper';
+import { botHeaders, githubUrl, humanHeaders, twitterBaseUrl } from './helpers/data';
 
 test('Home page redirect', async () => {
   const result = await app.request(
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: botHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   const resultHuman = await app.request(
     new Request('https://fxtwitter.com', {
       method: 'GET',
       headers: humanHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual(githubUrl);
@@ -27,7 +31,9 @@ test('Status redirect human', async () => {
     new Request('https://fxtwitter.com/jack/status/20', {
       method: 'GET',
       headers: humanHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
@@ -38,7 +44,9 @@ test('Status redirect human trailing slash', async () => {
     new Request('https://fxtwitter.com/jack/status/20/', {
       method: 'GET',
       headers: humanHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://x.com/jack/status/20');
@@ -52,12 +60,13 @@ test('Status redirect human custom base redirect', async () => {
         ...humanHeaders,
         Cookie: 'cf_clearance=a; base_redirect=https://nitter.net'
       }
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual('https://nitter.net/jack/status/20');
 });
-
 
 test('Twitter moment redirect', async () => {
   const result = await app.request(
@@ -67,7 +76,9 @@ test('Twitter moment redirect', async () => {
         method: 'GET',
         headers: botHeaders
       }
-    ), undefined, envWrapper
+    ),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(302);
   expect(result.headers.get('location')).toEqual(`${twitterBaseUrl}/i/events/1572638642127966214`);

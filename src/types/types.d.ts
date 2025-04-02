@@ -101,8 +101,9 @@ declare interface APIMedia {
 }
 
 declare interface APIPhoto extends APIMedia {
-  type: 'photo';
-  altText: string;
+  type: 'photo' | 'gif';
+  transcode_url?: string;
+  altText?: string;
 }
 
 declare interface APIVideo extends APIMedia {
@@ -243,8 +244,6 @@ declare interface OEmbed {
   type: 'link' | 'rich';
   version: '1.0';
 }
-
-
 
 // Mastodon API V1 Interfaces
 export interface ActivityStatus {

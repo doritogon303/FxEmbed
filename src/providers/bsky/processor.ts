@@ -94,7 +94,7 @@ export const buildAPIBskyPost = async (
           width: 0,
           height: 0
         }
-      ]
+      ];
     } else {
       apiStatus.media.photos = [
         {

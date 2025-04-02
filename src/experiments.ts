@@ -34,7 +34,7 @@ const Experiments: { [key in Experiment]: ExperimentConfig } = {
   [Experiment.TRANSCODE_GIFS]: {
     name: 'Transcode GIFs',
     description: 'Transcode GIFs for Discord, etc.',
-    percentage: 0
+    percentage: 1
   },
   [Experiment.IV_FORCE_THREAD_UNROLL]: {
     name: 'IV force thread unroll',

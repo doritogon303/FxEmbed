@@ -1,15 +1,18 @@
 import { Context } from 'hono';
 import { APIPhoto, APIVideo } from '../types/types';
+import { Constants } from '../constants';
+import { getGIFTranscodeDomain, shouldTranscodeGif } from './giftranscode';
 
 /* Help populate API response for media */
 export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo | null => {
+  const shouldTranscodeGifs = shouldTranscodeGif(c);
   if (media.type === 'photo') {
     return {
       type: 'photo',
       url: media.media_url_https,
       width: media.original_info?.width,
       height: media.original_info?.height,
-      altText: media.ext_alt_text || ''
+      altText: media.ext_alt_text
     };
   } else if (media.type === 'video' || media.type === 'animated_gif') {
     /* Find the variant with the highest bitrate */
@@ -34,6 +37,18 @@ export const processMedia = (c: Context, media: TweetMedia): APIPhoto | APIVideo
         return !format.url.includes('hevc');
       })
       .reduce?.((a, b) => ((a.bitrate ?? 0) > (b.bitrate ?? 0) ? a : b));
+    if (media.type === 'animated_gif' && shouldTranscodeGifs) {
+      return {
+        type: 'gif',
+        url: media.media_url_https,
+        width: media.original_info?.width,
+        height: media.original_info?.height,
+        transcode_url: bestVariant?.url
+          .replace(Constants.TWITTER_VIDEO_BASE, `https://${getGIFTranscodeDomain(media.id_str)}`)
+          .replace('.mp4', '.gif'),
+        altText: media.ext_alt_text
+      };
+    }
     return {
       url: bestVariant?.url || '',
       thumbnail_url: media.media_url_https,

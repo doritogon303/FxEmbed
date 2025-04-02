@@ -24,15 +24,14 @@
                     "urls": []
                   },
                   "url": {
-                    "urls": [{
-                      "display_url": "link.vyseroy.wales",
-                      "expanded_url": "http://link.vyseroy.wales/",
-                      "url": "https://t.co/CQVMuRZoA9",
-                      "indices": [
-                        0,
-                        23
-                      ]
-                    }]
+                    "urls": [
+                      {
+                        "display_url": "link.vyseroy.wales",
+                        "expanded_url": "http://link.vyseroy.wales/",
+                        "url": "https://t.co/CQVMuRZoA9",
+                        "indices": [0, 23]
+                      }
+                    ]
                   }
                 },
                 "fast_followers_count": 0,
@@ -46,9 +45,7 @@
                 "media_count": 1879,
                 "name": "Vyseroy \uD83D\uDE80",
                 "normal_followers_count": 626,
-                "pinned_tweet_ids_str": [
-                  "1830161308747989498"
-                ],
+                "pinned_tweet_ids_str": ["1830161308747989498"],
                 "possibly_sensitive": false,
                 "profile_banner_url": "https://pbs.twimg.com/profile_banners/134079656/1681080761",
                 "profile_image_url_https": "https://pbs.twimg.com/profile_images/1761375988833832960/BEcUkWTM_normal.jpg",
@@ -63,11 +60,13 @@
               "professional": {
                 "rest_id": "1603420379313233921",
                 "professional_type": "Creator",
-                "category": [{
-                  "id": 1042,
-                  "name": "Content Creator",
-                  "icon_name": "IconBriefcaseStroke"
-                }]
+                "category": [
+                  {
+                    "id": 1042,
+                    "name": "Content Creator",
+                    "icon_name": "IconBriefcaseStroke"
+                  }
+                ]
               },
               "tipjar_settings": {
                 "is_enabled": false,
@@ -86,7 +85,8 @@
         "card": {
           "rest_id": "card://1899954693746405377",
           "legacy": {
-            "binding_values": [{
+            "binding_values": [
+              {
                 "key": "choice1_label",
                 "value": {
                   "string_value": "MISC Freelancer",
@@ -204,9 +204,7 @@
         },
         "unmention_data": {},
         "edit_control": {
-          "edit_tweet_ids": [
-            "1899954694652309701"
-          ],
+          "edit_tweet_ids": ["1899954694652309701"],
           "editable_until_msecs": "1741823073000",
           "is_edit_eligible": false,
           "edits_remaining": "5"
@@ -223,37 +221,23 @@
           "bookmarked": false,
           "created_at": "Wed Mar 12 22:44:33 +0000 2025",
           "conversation_id_str": "1899954694652309701",
-          "display_text_range": [
-            0,
-            139
-          ],
+          "display_text_range": [0, 139],
           "entities": {
-            "hashtags": [{
-                "indices": [
-                  97,
-                  109
-                ],
+            "hashtags": [
+              {
+                "indices": [97, 109],
                 "text": "starcitizen"
               },
               {
-                "indices": [
-                  110,
-                  115
-                ],
+                "indices": [110, 115],
                 "text": "poll"
               },
               {
-                "indices": [
-                  116,
-                  127
-                ],
+                "indices": [116, 127],
                 "text": "videogames"
               },
               {
-                "indices": [
-                  128,
-                  139
-                ],
+                "indices": [128, 139],
                 "text": "spacegames"
               }
             ],

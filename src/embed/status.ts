@@ -27,7 +27,7 @@ import {
   ResponseInstructions,
   SocialThread
 } from '../types/types';
-
+import { shouldTranscodeGif } from '../helpers/giftranscode';
 export const returnError = (c: Context, error: string): Response => {
   const branding = getBranding(c);
   return c.html(
@@ -229,10 +229,20 @@ export const handleStatus = async (
     }
 
     if (redirectUrl) {
+      if (selectedMedia?.type === 'gif' && shouldTranscodeGif(c)) {
+        redirectUrl = (selectedMedia as APIPhoto).transcode_url ?? redirectUrl;
+      }
+  
+      if (selectedMedia?.type === 'video' && 
+        experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
+      ) {
+        redirectUrl = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(redirectUrl)}`;
+      }
       // Only append name if it's an image
       if (/\.(png|jpe?g|gif)(\?|$)/.test(redirectUrl) && flags.name) {
         redirectUrl = `${redirectUrl}:${flags.name}`;
       }
+      console.log('redirectUrl', redirectUrl);
       return c.redirect(redirectUrl, 302);
     }
   }

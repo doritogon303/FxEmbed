@@ -11,21 +11,7 @@ import {
   ResponseInstructions
 } from '../types/types';
 import { getBranding } from '../helpers/branding';
-
-const getGIFTranscodeDomain = (twitterId: string): string | null => {
-  const gifTranscoderList = Constants.GIF_TRANSCODE_DOMAIN_LIST;
-
-  if (gifTranscoderList.length === 0) {
-    return null;
-  }
-
-  let hash = 0;
-  for (let i = 0; i < twitterId.length; i++) {
-    const char = twitterId.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-  }
-  return gifTranscoderList[Math.abs(hash) % gifTranscoderList.length];
-};
+import { getGIFTranscodeDomain, shouldTranscodeGif } from '../helpers/giftranscode';
 
 export const renderVideo = (
   properties: RenderProperties,
@@ -82,8 +68,7 @@ export const renderVideo = (
 
   if (
     status.provider !== DataProvider.Bsky &&
-    experimentCheck(Experiment.TRANSCODE_GIFS, !!Constants.GIF_TRANSCODE_DOMAIN_LIST) &&
-    !userAgent?.includes('Telegram') &&
+    shouldTranscodeGif(properties.context) &&
     video.type === 'gif'
   ) {
     url = video.url.replace(

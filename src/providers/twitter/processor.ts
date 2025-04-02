@@ -9,6 +9,8 @@ import { translateStatus } from '../../helpers/translate';
 import { Context } from 'hono';
 import { DataProvider } from '../../enum';
 import { APIUser, APITwitterStatus, FetchResults, APIVideo, APIPhoto } from '../../types/types';
+import { experimentCheck, Experiment } from '../../experiments';
+import { shouldTranscodeGif } from '../../helpers/giftranscode';
 
 export const buildAPITwitterStatus = async (
   c: Context,
@@ -267,15 +269,19 @@ export const buildAPITwitterStatus = async (
     const mediaObject = processMedia(c, media);
     if (mediaObject) {
       apiStatus.media.all = apiStatus.media?.all ?? [];
+      const shouldTranscodeGifs = shouldTranscodeGif(c);
       apiStatus.media?.all?.push(mediaObject);
-      if (mediaObject.type === 'photo') {
+      if (mediaObject.type === 'photo' || (mediaObject.type === 'gif' && shouldTranscodeGifs)) {
         apiStatus.embed_card = 'summary_large_image';
         apiStatus.media.photos = apiStatus.media?.photos ?? [];
-        apiStatus.media.photos?.push(mediaObject);
-      } else if (mediaObject.type === 'video' || mediaObject.type === 'gif') {
+        apiStatus.media.photos?.push(mediaObject as APIPhoto);
+      } else if (
+        mediaObject.type === 'video' ||
+        (mediaObject.type === 'gif' && !shouldTranscodeGifs)
+      ) {
         apiStatus.embed_card = 'player';
         apiStatus.media.videos = apiStatus.media?.videos ?? [];
-        apiStatus.media.videos?.push(mediaObject);
+        apiStatus.media.videos?.push(mediaObject as APIVideo);
       } else {
         console.log('Unknown media type', mediaObject.type);
       }

@@ -1,4 +1,3 @@
-
 export const botHeaders = { 'User-Agent': 'Discordbot/2.0' };
 export const humanHeaders = {
   'User-Agent':

@@ -1,15 +1,17 @@
-import { test, expect } from "vitest";
-import { UserAPIResponse, APIUser, TweetAPIResponse, APITwitterStatus } from "../src/types/types";
-import { app } from "../src/worker";
-import { botHeaders, twitterBaseUrl } from "./helpers/data";
-import envWrapper from "./helpers/env-wrapper";
+import { test, expect } from 'vitest';
+import { UserAPIResponse, APIUser, TweetAPIResponse, APITwitterStatus } from '../src/types/types';
+import { app } from '../src/worker';
+import { botHeaders, twitterBaseUrl } from './helpers/data';
+import envWrapper from './helpers/env-wrapper';
 
 test('API fetch user', async () => {
   const result = await app.request(
     new Request('https://api.fxtwitter.com/x', {
       method: 'GET',
       headers: botHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(200);
   const response = (await result.json()) as UserAPIResponse;
@@ -39,7 +41,9 @@ test('API fetch user that does not exist', async () => {
     new Request('https://api.fxtwitter.com/notfound3842342', {
       method: 'GET',
       headers: botHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(404);
   const response = (await result.json()) as UserAPIResponse;
@@ -54,7 +58,9 @@ test('API fetch basic Status', async () => {
     new Request('https://api.fxtwitter.com/status/20', {
       method: 'GET',
       headers: botHeaders
-    }), undefined, envWrapper
+    }),
+    undefined,
+    envWrapper
   );
   expect(result.status).toEqual(200);
   const response = (await result.json()) as TweetAPIResponse;
