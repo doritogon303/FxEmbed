@@ -7,7 +7,6 @@ export default defineConfig({
     RELEASE_NAME: JSON.stringify('fixtweet-test'),
     TEXT_ONLY_DOMAINS: JSON.stringify('t.fxtwitter.com,t.twittpr.com,t.fixupx.com'),
     INSTANT_VIEW_DOMAINS: JSON.stringify('i.fxtwitter.com,i.twittpr.com,i.fixupx.com'),
-    INSTANT_VIEW_THREADS_DOMAINS: JSON.stringify('u.fxtwitter.com,u.twittpr.com,u.fixupx.com'),
     GALLERY_DOMAINS: JSON.stringify('g.fxtwitter.com,g.twittpr.com,g.fixupx.com'),
     NATIVE_MULTI_IMAGE_DOMAINS: JSON.stringify('m.fxtwitter.com,m.twittpr.com,m.fixupx.com'),
     OLD_EMBED_DOMAINS: JSON.stringify('o.fxtwitter.com,o.twittpr.com,o.fixupx.com'),

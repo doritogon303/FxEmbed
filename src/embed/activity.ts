@@ -4,7 +4,7 @@ import { DataProvider, returnError } from './status';
 import { constructTwitterThread } from '../providers/twitter/conversation';
 import { constructBlueskyThread } from '../providers/bsky/conversation';
 import { Constants } from '../constants';
-import { getSocialProof } from '../helpers/socialproof';
+import { getActivitySocialProof } from '../helpers/socialproof';
 import i18next from 'i18next';
 import icu from 'i18next-icu';
 import { escapeRegex } from '../helpers/utils';
@@ -75,9 +75,9 @@ const getStatusText = (status: APIStatus) => {
   if (status.poll) {
     text += `${generatePoll(status.poll)}`;
   }
-  const socialProof = getSocialProof(status);
+  const socialProof = getActivitySocialProof(status);
   if (socialProof) {
-    text += `<b>${socialProof.replace(/ {3}/g, '&ensp;')}</b>`;
+    text += socialProof;
   }
   return text;
 };
@@ -357,13 +357,17 @@ export const handleActivity = async (
       }
       console.log('updated mediaList', mediaList);
     }
-    if (!nativeMultiImage && mediaList?.length !== 1 && thread.status.media?.mosaic) {
-      // Cast the response to have media_attachments as ActivityMediaAttachment[]
+    if (
+      !nativeMultiImage &&
+      mediaList?.length !== 1 &&
+      (thread.status.media?.mosaic || thread.status.quote?.media?.mosaic)
+    ) {
+      const mosaic = thread.status.media?.mosaic || thread.status.quote?.media?.mosaic;
       response.media_attachments = [
         {
           id: '114163769487684704',
           type: 'image',
-          url: thread.status.media?.mosaic?.formats?.jpeg || '',
+          url: mosaic?.formats?.jpeg || '',
           remote_url: null,
           preview_url: null,
           preview_remote_url: null,
@@ -371,8 +375,8 @@ export const handleActivity = async (
           description: null,
           meta: {
             original: {
-              width: thread.status.media?.mosaic?.width || 0,
-              height: thread.status.media?.mosaic?.height || 0
+              width: mosaic?.width || 0,
+              height: mosaic?.height || 0
             }
           }
         }

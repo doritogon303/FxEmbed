@@ -18,27 +18,27 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.10",
-    "@cloudflare/workers-types": "^4.20250404.0",
+    "@cloudflare/workers-types": "^4.20250410.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
-    "@sentry/esbuild-plugin": "^3.2.4",
+    "@sentry/esbuild-plugin": "^3.3.1",
     "@sentry/integrations": "^7.114.0",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
-    "@typescript-eslint/parser": "^8.29.0",
-    "dotenv": "^16.4.7",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "dotenv": "^16.5.0",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.1",
+    "eslint-config-prettier": "^10.1.2",
     "eslint-config-typescript": "^3.0.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-sonarjs": "^0.25.1",
     "prettier": "^3.5.3",
     "ts-loader": "^9.5.2",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "vitest": "^3.0.9",
-    "wrangler": "^4.7.1"
+    "wrangler": "^4.10.0"
   },
   "dependencies": {
     "@hono/sentry": "^1.2.1",
-    "hono": "^4.7.5",
+    "hono": "^4.7.6",
     "i18next": "^24.2.3",
     "i18next-icu": "^2.3.0"
   }

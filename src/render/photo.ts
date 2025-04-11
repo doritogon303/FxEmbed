@@ -17,7 +17,6 @@ export const renderPhoto = (
   const instructions: ResponseInstructions = { addHeaders: [] };
 
   if ((status.media?.photos?.length || 0) > 1 && (!status.media?.mosaic || isOverrideMedia)) {
-    photo = photo as APIPhoto;
 
     const all = status.media?.all as APIMedia[];
     const baseString =
@@ -53,6 +52,7 @@ export const renderPhoto = (
       `<meta property="og:image" content="${photo.formats.jpeg}"/>`
     ];
   } else {
+    photo = photo as APIPhoto;
     instructions.addHeaders = [
       `<meta property="twitter:image" content="${photo.url}"/>`,
       `<meta property="og:image" content="${photo.url}"/>`,
@@ -61,6 +61,12 @@ export const renderPhoto = (
       `<meta property="og:image:width" content="${photo.width}"/>`,
       `<meta property="og:image:height" content="${photo.height}"/>`
     ];
+    if (photo.altText) {
+      instructions.addHeaders.push(
+        `<meta property="twitter:image:alt" content="${photo.altText}"/>`,
+        `<meta property="og:image:alt" content="${photo.altText}"/>`
+      );
+    }
   }
 
   return instructions;

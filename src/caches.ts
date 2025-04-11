@@ -19,6 +19,11 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
 
   console.log('cacheUrl', cacheUrl);
 
+  // Ignore caching on workers.dev
+  if (cacheUrl.hostname.includes('workers.dev')) {
+    await next();
+  }
+
   let cacheKey: Request;
   const returnAsJson = Constants.API_HOST_LIST.includes(cacheUrl.hostname);
 
@@ -90,10 +95,13 @@ export const cacheMiddleware = (): MiddlewareHandler => async (c, next) => {
       return c.html('');
     /* We properly state our OPTIONS when asked */
     case 'OPTIONS':
-      c.header('allow', Constants.RESPONSE_HEADERS.allow);
-      c.body(null);
-      c.status(204);
-      return;
+      console.log('OPTIONS!!!');
+      c.header('Allow', Constants.RESPONSE_HEADERS.allow);
+      c.header('Access-Control-Allow-Origin', '*');
+      c.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+      c.header('Access-Control-Allow-Headers', '*');
+      c.status(200);
+      return c.body('');
     default:
       if (returnAsJson) return c.json('');
       return c.html('', 405);

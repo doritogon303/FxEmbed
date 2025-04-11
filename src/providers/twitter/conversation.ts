@@ -313,7 +313,8 @@ export const constructTwitterThread = async (
   processThread = false,
   c: Context,
   language: string | undefined,
-  legacyAPI = false
+  legacyAPI = false,
+  useRestId = false
 ): Promise<SocialThread> => {
   console.log('language', language);
 
@@ -334,6 +335,7 @@ export const constructTwitterThread = async (
   const tryTweetDetailFirst =
     typeof c.env?.TwitterProxy !== 'undefined' &&
     !language &&
+    !useRestId &&
     (processThread || url.hostname.includes('api'));
 
   // First attempt with preferred API

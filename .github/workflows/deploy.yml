@@ -1,0 +1,77 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  workflow_run:
+    workflows: ['tests']
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    # Only run if the workflow_run event was successful (when triggered by tests workflow)
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: Production
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create wrangler.toml
+        run: |
+          cat << EOF > wrangler.toml
+          name = "${{ vars.CF_WORKER_NAME }}"
+          account_id = "${{ secrets.CF_ACCOUNT_ID }}"
+          main = "./dist/worker.js"
+          compatibility_date = "${{ vars.CF_COMPATIBILITY_DATE }}"
+          send_metrics = false
+          no_bundle = true
+          analytics_engine_datasets = [
+            { binding = "AnalyticsEngine" }
+          ]
+
+          services = [
+            { binding = "TwitterProxy", service = "elongator" }
+          ]
+
+          [ai]
+          binding = "AI"
+
+          [build]
+          command = "npm run build"
+          EOF
+
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v3
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          STANDARD_DOMAIN_LIST: ${{ vars.STANDARD_DOMAIN_LIST }}
+          STANDARD_BSKY_DOMAIN_LIST: ${{ vars.STANDARD_BSKY_DOMAIN_LIST }}
+          DIRECT_MEDIA_DOMAINS: ${{ vars.DIRECT_MEDIA_DOMAINS }}
+          TEXT_ONLY_DOMAINS: ${{ vars.TEXT_ONLY_DOMAINS }}
+          INSTANT_VIEW_DOMAINS: ${{ vars.INSTANT_VIEW_DOMAINS }}
+          GALLERY_DOMAINS: ${{ vars.GALLERY_DOMAINS }}
+          NATIVE_MULTI_IMAGE_DOMAINS: ${{ vars.NATIVE_MULTI_IMAGE_DOMAINS }}
+          QUIET_DOMAINS: ${{ vars.QUIET_DOMAINS }}
+          OLD_EMBED_DOMAINS: ${{ vars.OLD_EMBED_DOMAINS }}
+          MOSAIC_DOMAIN_LIST: ${{ vars.MOSAIC_DOMAIN_LIST }}
+          MOSAIC_BSKY_DOMAIN_LIST: ${{ vars.MOSAIC_BSKY_DOMAIN_LIST }}
+          MEDIA_PROXY_DOMAIN_LIST: ${{ vars.MEDIA_PROXY_DOMAIN_LIST }}
+          GIF_TRANSCODE_DOMAIN_LIST: ${{ vars.GIF_TRANSCODE_DOMAIN_LIST }}
+          API_HOST_LIST: ${{ vars.API_HOST_LIST }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: deploy --no-bundle

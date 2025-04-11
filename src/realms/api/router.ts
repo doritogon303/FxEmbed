@@ -28,17 +28,17 @@ api.use(trimTrailingSlash());
 api.get('/2/hit', linkHitRequest);
 api.get('/2/go', linkGoRequest);
 
+api.get('/2/status/:id', statusAPIRequest);
+api.get('/2/thread/:id', threadAPIRequest);
+api.get('/2/profile/:handle', profileAPIRequest);
+api.get('/2/owoembed', oembed);
+
 /* Current v1 API endpoints. Currently, these still go through the Twitter embed requests. API v2+ won't do this. */
 api.get('/status/:id', statusRequest);
 api.get('/status/:id/:language', statusRequest);
 api.get('/:handle/status/:id', statusRequest);
 api.get('/:handle/status/:id/:language', statusRequest);
 api.get('/robots.txt', async c => c.text(Strings.ROBOTS_TXT_API));
-
-api.get('/2/status/:id', statusAPIRequest);
-api.get('/2/thread/:id', threadAPIRequest);
-api.get('/2/profile/:handle', profileAPIRequest);
-api.get('/2/owoembed', oembed);
 
 api.get('/:handle', profileRequest);
 

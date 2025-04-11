@@ -232,8 +232,9 @@ export const handleStatus = async (
       if (selectedMedia?.type === 'gif' && shouldTranscodeGif(c)) {
         redirectUrl = (selectedMedia as APIPhoto).transcode_url ?? redirectUrl;
       }
-  
-      if (selectedMedia?.type === 'video' && 
+
+      if (
+        selectedMedia?.type === 'video' &&
         experimentCheck(Experiment.VIDEO_REDIRECT_WORKAROUND, !!Constants.API_HOST_LIST)
       ) {
         redirectUrl = `https://${Constants.API_HOST_LIST[0]}/2/go?url=${encodeURIComponent(redirectUrl)}`;
